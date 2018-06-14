@@ -1,0 +1,4 @@
+GET     /                           controllers.HomeController.index
+GET     /locale/:locale             controllers.HomeController.change(locale: String)
+
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)

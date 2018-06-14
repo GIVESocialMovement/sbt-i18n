@@ -1,10 +1,10 @@
 logs
 target
 .DS_Store
-/.g8
-/.idea
-/.idea_modules
-/.classpath
-/.project
-/.settings
-/.gradle
+.g8
+.idea
+.idea_modules
+.classpath
+.project
+.settings
+.gradle

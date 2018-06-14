@@ -1,0 +1,15 @@
+@(messages: Messages)
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.5.16/vue.js"></script>
+<script src="https://unpkg.com/vue-i18n/dist/vue-i18n.js"></script>
+<script src="@routes.Assets.versioned("locale/messages." + messages.lang.code + ".js")" type="text/javascript"></script>
+
+Change language: <a href="/locale/en">en</a> <a href="/locale/th">th</a> <a href="/locale/de">de</a>
+
+<p>From server side: <strong>@messages("home.messageFromServerSide")</strong></p>
+
+<p id="app">From client side: <strong>{{ $t('home.messageFromClientSide') }}</strong></p>
+
+<script>
+  var app = new Vue({el: '#app'})
+</script>
