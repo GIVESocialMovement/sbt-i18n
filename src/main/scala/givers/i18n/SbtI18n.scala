@@ -16,9 +16,9 @@ object SbtI18n extends AutoPlugin {
   object autoImport {
     object I18nKeys {
       val i18n = TaskKey[Seq[File]]("i18n", "Run i18n")
-      val path = TaskKey[File]("i18nPath", "The parent path of the locale files. It must be a sub-directory of ./conf. Default: ./conf/locale")
-      val defaultLocale = TaskKey[String]("i18nDefaultLocale", "The default locale that is also used as a fallback")
-      val serializer = TaskKey[Serializer](
+      val path = SettingKey[File]("i18nPath", "The parent path of the locale files. It must be a sub-directory of ./conf. Default: ./conf/locale")
+      val defaultLocale = SettingKey[String]("i18nDefaultLocale", "The default locale that is also used as a fallback")
+      val serializer = SettingKey[Serializer](
         "i18nSerializer",
         "The serializer that converts a set of mappings to the wanted Javascript code. Default to VueI18nSerializer (compatible with https://kazupon.github.io/vue-i18n/)")
     }
@@ -34,7 +34,7 @@ object SbtI18n extends AutoPlugin {
     path in i18n := new File("./conf/locale"),
     serializer in i18n := VueI18nSerializer,
     excludeFilter in i18n := HiddenFileFilter || "_*",
-    includeFilter in i18n := new SimpleFileFilter(_.getCanonicalPath.startsWith(path.value.getCanonicalPath)),
+    includeFilter in i18n := new SimpleFileFilter({ f => f.isFile && f.getCanonicalPath.startsWith((path in i18n).value.getCanonicalPath) }),
     resourceManaged in i18n := webTarget.value / "vueI18n" / "main",
     managedResourceDirectories in Assets+= (resourceManaged in i18n in Assets).value,
     resourceGenerators in Assets += i18n in Assets,
