@@ -77,8 +77,8 @@ For example, you may include it in `main.scala.html` as shown below:
 </script>
 ```
 
-Please inspect `messages.en.js` (or similar file). With [vue-i18n], we automatically inject i18n into every Vue's instance.
-Therefore, we don't need to install Vue-i18n manually when instantiating Vue.
+Please inspect `messages.en.js` (or similar file). With `VueI18nSerializer` (for [vue-i18n](https://github.com/kazupon/vue-i18n)), we automatically inject `i18n` into every Vue's instance.
+Therefore, we don't need to install [vue-i18n](https://github.com/kazupon/vue-i18n) manually when instantiating Vue.
 
 See the `test-play-project` directory for a complete example.
 
