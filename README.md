@@ -6,10 +6,10 @@ sbt-i18n
 
 This plugin unifies (server-side and client-side) internationalization for Playframework.
 
-It hot-reloads [internationalization manifest files](https://www.playframework.com/documentation/2.6.x/ScalaI18N) into Javascript files.
+It hot-reloads the [Playframework's internationalization manifest files](https://www.playframework.com/documentation/2.6.x/ScalaI18N) into Javascript files.
 In turn, the Javascript files can be used for internationalization on client-side.
 
-This plugin is currently used at [GIVE.asia](https://give.asia)
+This plugin is currently used at [GIVE.asia](https://give.asia).
 
 Support
 ----------------
