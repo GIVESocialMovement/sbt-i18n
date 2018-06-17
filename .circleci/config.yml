@@ -9,14 +9,16 @@ jobs:
     environment:
       JVM_OPTS: -Xmx3200m
       TERM: dumb
+      CACHE_VERSION: v3
 
     steps:
       - checkout
 
       - restore_cache:
           keys:
-          - v1-dependencies-{{ checksum "build.sbt" }}
-          - v1-dependencies-
+          - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "project/plugins.sbt" }}-{{ checksum "build.sbt" }}
+          - dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "project/plugins.sbt" }}
+          - dependencies-{{ .Environment.CACHE_VERSION }}
 
       - run: sbt coverage test coverageReport
       - run: bash <(curl -s https://codecov.io/bash) -Z
@@ -26,13 +28,8 @@ jobs:
           paths:
             - ~/.m2
             - ~/.ivy2/cache
-          key: v1-dependencies--{{ checksum "build.sbt" }}
+            - ~/.sbt
+          key: dependencies-{{ .Environment.CACHE_VERSION }}-{{ checksum "project/plugins.sbt" }}-{{ checksum "build.sbt" }}
 
       - store_test_results:
           path: ./target/junit
-
-workflows:
-  version: 2
-  test:
-    jobs:
-      - test
