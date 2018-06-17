@@ -1,11 +1,15 @@
 sbt-i18n
 =========
 
+[![CircleCI](https://circleci.com/gh/GIVESocialMovement/sbt-i18n/tree/master.svg?style=shield)](https://circleci.com/gh/GIVESocialMovement/sbt-i18n/tree/master)
+[![codecov](https://codecov.io/gh/GIVESocialMovement/sbt-i18n/branch/master/graph/badge.svg)](https://codecov.io/gh/GIVESocialMovement/sbt-i18n)
+
 This plugin unifies (server-side and client-side) internationalization for Playframework.
 
 It hot-reloads [internationalization manifest files](https://www.playframework.com/documentation/2.6.x/ScalaI18N) into Javascript files.
 In turn, the Javascript files can be used for internationalization on client-side.
 
+This plugin is currently used at [GIVE.asia](https://give.asia)
 
 Support
 ----------------
@@ -36,10 +40,12 @@ I18nKeys.i18n / I18nKeys.path := new File("./conf/locale") // Set the path that 
 I18nKeys.i18n / I18nKeys.serializer := givers.i18n.VueI18nSerializer // Define the serializer. Default to VueI18nSerializer for vue-i18n.
 ```
 
-Since `I18nKeys.path` is `./conf/locale`, we need to set the Playframework's i18n path in `application.conf`:
+Since `I18nKeys.path` is `./conf/locale` and `I18nKeys.defaultLocale` is `en`,
+we need to set the Playframework's i18n path and langs in `application.conf`:
 
 ```
 play.i18n.path = "locale" // We only need to specify the sub path of `./conf`
+play.i18n.langs = [ "en", "th", "zh" ] // The first lang becomes the default lang
 ```
 
 
@@ -86,7 +92,7 @@ See the `test-play-project` directory for a complete example.
 Interested in using the plugin?
 ---------------------------------
 
-Please feel free to open an issue to ask questions. Let us know how you want to use the plugin.
+Please feel free to open an issue to ask questions. Let us know how you want to use the plugin. We want you to use the plugin successfully.
 
 
 Contributing
