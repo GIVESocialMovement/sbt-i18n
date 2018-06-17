@@ -27,8 +27,11 @@ Add the below lines to `project/plugins.sbt`:
 ```
 lazy val root = Project("plugins", file(".")).aggregate(sbtI18n).dependsOn(sbtI18n)
 
-lazy val sbtI18n = RootProject(uri("git://github.com/GIVESocialMovement/sbt-i18n.git#master"))
+lazy val sbtI18n = RootProject(uri("git://github.com/GIVESocialMovement/sbt-i18n.git#f033c964a0b53d1b1aa10dc97328a612dc7d5425"))
 ```
+
+You may change `f033c964a0b53d1b1aa10dc97328a612dc7d5425` to a specific commit that you want.
+
 
 ### 2. Configure build.sbt and conf/application.conf
 
@@ -64,6 +67,9 @@ For example, you may include it in `main.scala.html` as shown below:
 
 <script src="@routes.Assets.versioned("locale/messages." + messages.lang.code + ".js")" type="text/javascript"></script>
 ```
+
+Please note that `messages` is compiled to `messages.[defaultLocale].js` while `messages.de` is compiled to `messages.de.js`.
+
 
 ### 5. Use the translation on server and client side
 
