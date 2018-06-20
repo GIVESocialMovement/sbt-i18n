@@ -35,7 +35,7 @@ object SbtI18n extends AutoPlugin {
     serializer in i18n := VueI18nSerializer,
     excludeFilter in i18n := HiddenFileFilter || "_*",
     includeFilter in i18n := new SimpleFileFilter({ f => f.isFile && f.getCanonicalPath.startsWith((path in i18n).value.getCanonicalPath) }),
-    resourceManaged in i18n := webTarget.value / "vueI18n" / "main",
+    resourceManaged in i18n := webTarget.value / "i18n" / "main",
     managedResourceDirectories in Assets+= (resourceManaged in i18n in Assets).value,
     resourceGenerators in Assets += i18n in Assets,
     i18n in Assets := task.dependsOn(WebKeys.webModules in Assets).value
@@ -48,6 +48,9 @@ object SbtI18n extends AutoPlugin {
     val vueI18nReporter = (reporter in Assets).value
     val defaultLocaleValue = (defaultLocale in i18n).value
     val serializerValue = (serializer in i18n).value
+    val localePath = (path in i18n).value
+
+    val defaultLocaleFile = localePath / "messages"
 
     val sources = (sourceDir ** ((includeFilter in i18n in Assets).value -- (excludeFilter in i18n in Assets).value)).get
 
@@ -73,6 +76,7 @@ object SbtI18n extends AutoPlugin {
         targetDir,
         logger,
         defaultLocaleValue,
+        defaultLocaleFile,
         serializerValue
       )
 
