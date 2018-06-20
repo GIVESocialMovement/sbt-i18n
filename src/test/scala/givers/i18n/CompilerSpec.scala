@@ -1,6 +1,6 @@
 package givers.i18n
 
-import java.io.PrintWriter
+import java.io.{FileNotFoundException, PrintWriter}
 import java.nio.file.Files
 
 import helpers.BaseSpec
@@ -18,11 +18,23 @@ object CompilerSpec extends BaseSpec {
     val logger = mock[ManagedLogger]
     val sourceDir = Files.createTempDirectory("sourceDir")
     val targetDir = Files.createTempDirectory("targetDir")
+    val defaultLocaleFile = {
+      val tmp = Files.createTempFile("messages", "")
+      val pw = new PrintWriter(tmp.toFile)
+      pw.write(
+        """
+          |test.map.a = default-a
+          |test.map.c = default-c
+        """.stripMargin)
+      pw.close()
+      tmp.toFile
+    }
     val compiler = new Compiler(
       sourceDir = sourceDir.toFile,
       targetDir = targetDir.toFile,
       logger = logger,
       defaultLocale = "en-GB",
+      defaultLocaleFile = defaultLocaleFile,
       serializer = serializer
     )
     val inputContent = """
@@ -42,20 +54,9 @@ object CompilerSpec extends BaseSpec {
     }
 
     'parse - {
-      val tmp = Files.createTempFile("messages", "")
-      val pw = new PrintWriter(tmp.toFile)
-      pw.write(
-        """
-          |test.string = sss
-          |test.map.a = aaa
-          |test.map.b = bbb
-        """.stripMargin)
-      pw.close()
-
-      Compiler.parse(Input("conf/locale/messages", tmp, "en-GB")) ==> Map(
-        "test.string" -> "sss",
-        "test.map.a" -> "aaa",
-        "test.map.b" -> "bbb"
+      Compiler.parse(defaultLocaleFile) ==> Map(
+        "test.map.a" -> "default-a",
+        "test.map.c" -> "default-c"
       )
     }
 
@@ -66,22 +67,30 @@ object CompilerSpec extends BaseSpec {
       }
 
       'errorWhenNoDefault - {
-        val ex = intercept[Exception] {
-          compiler.compile(Seq(makeInput(".de", "de").path))
+        val invalidDefault = new Compiler(
+          sourceDir = sourceDir.toFile,
+          targetDir = targetDir.toFile,
+          logger = logger,
+          defaultLocale = "en-GB",
+          defaultLocaleFile = new File("/random-folder-that-does-not-exist/messages"),
+          serializer = serializer
+        )
+        val ex = intercept[FileNotFoundException] {
+          invalidDefault.compile(Seq(makeInput(".de", "de").path))
         }
-        ex.getMessage ==> "Unable to find messages or messages.en-GB (the default locale)."
+        ex.getMessage ==> "/random-folder-that-does-not-exist/messages (No such file or directory)"
         verifyZeroInteractions(serializer)
       }
 
       'succeed - {
-        val defaultLocaleContent =
+        val noExtContent =
           """
             |test.map.a = aaa2
             |test.map.c = ccc
           """.stripMargin
         val inputFiles = Seq(
           makeInput(".de", "de", inputContent).path,
-          makeInput("", "dontCare", defaultLocaleContent).path
+          makeInput("", "en-GB", noExtContent).path
         )
         val entries = compiler.compile(inputFiles)
 
@@ -102,7 +111,7 @@ object CompilerSpec extends BaseSpec {
             "test.string" -> "sss",
             "test.map.a" -> "aaa",
             "test.map.b" -> "bbb",
-            "test.map.c" -> "ccc"
+            "test.map.c" -> "default-c"
           )
         )
         verify(serializer).apply(

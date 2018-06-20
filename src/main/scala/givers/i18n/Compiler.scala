@@ -29,8 +29,8 @@ trait Serializer {
 object Compiler {
   type Locale = String
 
-  def parse(input: Input): Map[String, String] = {
-    Messages.parse(Messages.UrlMessageSource(input.file.toURI.toURL), input.file.getCanonicalPath).fold(throw _, { m => m})
+  def parse(file: File): Map[String, String] = {
+    Messages.parse(Messages.UrlMessageSource(file.toURI.toURL), file.getCanonicalPath).fold(throw _, { m => m})
   }
 }
 
@@ -39,13 +39,14 @@ class Compiler(
   targetDir: File,
   logger: ManagedLogger,
   defaultLocale: String,
+  defaultLocaleFile: File,
   serializer: Serializer
 ) {
   def compileSingle(input: Input, default: Map[String, String]): CompilationEntry = {
     val outputFile = targetDir / input.outputName
     Files.createDirectories(outputFile.getParentFile.toPath)
 
-    val output = serializer(input.locale, default ++ Compiler.parse(input))
+    val output = serializer(input.locale, default ++ Compiler.parse(input.file))
 
     val pw = new PrintWriter(outputFile)
     pw.write(output)
@@ -63,16 +64,12 @@ class Compiler(
     if (inputFiles.isEmpty) {
       return Seq.empty
     }
+    val default = Compiler.parse(defaultLocaleFile)
 
     val inputs = inputFiles.map { inputFile =>
       val locale = Some(inputFile.toFile.ext).filter(_.nonEmpty).getOrElse(defaultLocale)
       Input(Input.getName(sourceDir, inputFile), inputFile, locale)
     }
-    val defaultInput = inputs.find(_.locale == defaultLocale).getOrElse {
-      throw new Exception(s"Unable to find messages or messages.$defaultLocale (the default locale).")
-    }
-
-    val default = Compiler.parse(defaultInput)
 
     inputs.map { input => compileSingle(input, default) }
   }
