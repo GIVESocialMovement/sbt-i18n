@@ -11,7 +11,7 @@ libraryDependencies ++= Seq(
 organization := "givers.i18n"
 name := "sbt-i18n"
 
-scalaVersion := "2.12.5"
+scalaVersion := "2.12.6"
 
 publishMavenStyle := true
 
