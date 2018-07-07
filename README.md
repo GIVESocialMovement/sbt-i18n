@@ -27,9 +27,9 @@ How to use it
 Add the below lines to `project/plugins.sbt`:
 
 ```
-lazy val root = Project("plugins", file(".")).aggregate(sbtI18n).dependsOn(sbtI18n)
+resolvers += Resolver.bintrayRepo("givers", "maven")
 
-lazy val sbtI18n = RootProject(uri("git://github.com/GIVESocialMovement/sbt-i18n.git#f033c964a0b53d1b1aa10dc97328a612dc7d5425"))
+addSbtPlugin("givers.i18n" % "sbt-i18n" % "1.0.0")
 ```
 
 You may change `f033c964a0b53d1b1aa10dc97328a612dc7d5425` to a specific commit that you want.
