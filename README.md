@@ -32,8 +32,6 @@ resolvers += Resolver.bintrayRepo("givers", "maven")
 addSbtPlugin("givers.i18n" % "sbt-i18n" % "1.0.0")
 ```
 
-You may change `f033c964a0b53d1b1aa10dc97328a612dc7d5425` to a specific commit that you want.
-
 
 ### 2. Configure build.sbt and conf/application.conf
 
