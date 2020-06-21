@@ -3,7 +3,7 @@ lazy val `sbt-i18n` = project in file(".")
 enablePlugins(SbtWebBase)
 
 libraryDependencies ++= Seq(
-  "com.typesafe.play" %% "play" % "2.6.21",
+  "com.typesafe.play" %% "play" % "2.8.2",
   "org.mockito" % "mockito-core" % "2.18.3" % Test,
   "com.lihaoyi" %% "utest" % "0.6.3" % Test
 )
@@ -11,7 +11,7 @@ libraryDependencies ++= Seq(
 organization := "givers.i18n"
 name := "sbt-i18n"
 
-scalaVersion := "2.12.8"
+scalaVersion := "2.12.11"
 
 publishMavenStyle := true
 
