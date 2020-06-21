@@ -29,7 +29,7 @@ Add the below lines to `project/plugins.sbt`:
 ```
 resolvers += Resolver.bintrayRepo("givers", "maven")
 
-addSbtPlugin("givers.vuefy" % "sbt-i18n" % "2.0.0")
+addSbtPlugin("givers.vuefy" % "sbt-i18n" % "3.0.0")
 ```
 
 The artifacts are hosted here: https://bintray.com/givers/maven/sbt-i18n
