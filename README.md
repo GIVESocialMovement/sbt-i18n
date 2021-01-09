@@ -9,8 +9,6 @@ This plugin unifies (server-side and client-side) internationalization for Playf
 It hot-reloads the [Playframework's internationalization manifest files](https://www.playframework.com/documentation/2.6.x/ScalaI18N) into Javascript files.
 In turn, the Javascript files can be used for internationalization on client-side.
 
-See our blog post: https://give.engineering/2018/06/18/i18n-with-playframework-and-vue.html
-
 This plugin is currently used at [GIVE.asia](https://give.asia).
 
 Support
