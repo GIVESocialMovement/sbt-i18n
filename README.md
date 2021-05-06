@@ -27,10 +27,10 @@ Add the below lines to `project/plugins.sbt`:
 ```
 resolvers += Resolver.bintrayRepo("givers", "maven")
 
-addSbtPlugin("givers.i18n" % "sbt-i18n" % "3.0.0")
+addSbtPlugin("io.github.givesocialmovement" % "sbt-i18n" % "3.0.0")
 ```
 
-The artifacts are hosted here: https://bintray.com/givers/maven/sbt-i18n
+The artifacts are hosted here: https://search.maven.org/artifact/io.github.givesocialmovement/sbt-i18n/3.0.0/jar
 
 
 ### 2. Configure build.sbt and conf/application.conf
