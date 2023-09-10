@@ -2,7 +2,7 @@ package givers.i18n
 
 import play.api.libs.json.{JsValue, Json}
 
-object VueI18nSerializer extends Serializer {
+object VanillaJsI18nSerializer extends Serializer {
   def apply(locale: String, map: Map[String, String]): String = {
     /**
       * We add the option `i18n` to every Vue instantiation. We need to make sure we add the option before
@@ -10,16 +10,29 @@ object VueI18nSerializer extends Serializer {
       * So, we use `unshift`.
       */
     s"""
-       |"use strict";
+       |var messages = ${Json.stringify(buildMap(map))};
        |
-       |var vueI18n = new VueI18n({
-       |  locale: '$locale',
-       |  messages: ${Json.obj(locale -> buildMap(map)).toString}
-       |});
+       |function t(key, variables) {
+       |  const comps = key.split('.');
        |
-       |Vue.options.beforeCreate.unshift(function() {
-       |  this.$$options['i18n'] = vueI18n;
-       |});
+       |  var value = messages;
+       |
+       |  for (var comp of comps) {
+       |    if (value[comp]) {
+       |      value = value[comp];
+       |    } else {
+       |      return key;
+       |    }
+       |  }
+       |
+       |  if (!variables) { return value; }
+       |
+       |  for (const [key, v] of Object.entries(variables)) {
+       |    value = value.replaceAll(`{$${key}}`, v);
+       |  }
+       |
+       |  return value;
+       |}
      """.stripMargin.trim
   }
 
@@ -40,7 +53,7 @@ object VueI18nSerializer extends Serializer {
       .map { case (key, v) => key -> Json.toJsFieldJsValueWrapper(buildMap(v, s"$prefix$key.")) }
 
     resultLeaves.keys.toSet.intersect(resultNodes.keys.toSet).headOption.foreach { firstOverlapped =>
-      throw new Exception(s"$prefix$firstOverlapped is a string and a map at the same time. vue-i18n doesn't allow it.")
+      throw new Exception(s"$prefix$firstOverlapped is a string and a map at the same time. This is not allowed.")
     }
 
     Json.obj(resultLeaves.toSeq:_*) ++ Json.obj(resultNodes.toSeq:_*)

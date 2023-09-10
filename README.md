@@ -2,7 +2,6 @@ sbt-i18n
 =========
 
 [![CircleCI](https://circleci.com/gh/GIVESocialMovement/sbt-i18n/tree/master.svg?style=shield)](https://circleci.com/gh/GIVESocialMovement/sbt-i18n/tree/master)
-[![codecov](https://codecov.io/gh/GIVESocialMovement/sbt-i18n/branch/master/graph/badge.svg)](https://codecov.io/gh/GIVESocialMovement/sbt-i18n)
 
 This plugin unifies (server-side and client-side) internationalization for Playframework.
 
@@ -31,6 +30,15 @@ addSbtPlugin("io.github.givesocialmovement" % "sbt-i18n" % "3.0.0")
 ```
 
 The artifacts are hosted here: https://search.maven.org/artifact/io.github.givesocialmovement/sbt-i18n/3.0.0/jar
+
+Alternatively, you can load from a specific commit with the code below:
+
+```
+lazy val root =
+  Project("plugins", file(".")).aggregate(SbtI18n).dependsOn(SbtI18n)
+lazy val SbtSvelte = RootProject(uri("https://github.com/GIVESocialMovement/sbt-i18n.git#<pick_a_commit>"))
+```
+
 
 
 ### 2. Configure build.sbt and conf/application.conf
