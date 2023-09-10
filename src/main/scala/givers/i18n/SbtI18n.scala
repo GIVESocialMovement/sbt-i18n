@@ -30,29 +30,29 @@ object SbtI18n extends AutoPlugin {
   import I18nKeys._
 
   override def projectSettings: Seq[Setting[_]] = inConfig(Assets)(Seq(
-    defaultLocale in i18n := "en",
-    path in i18n := new File("./conf/locale"),
-    serializer in i18n := VueI18nSerializer,
-    excludeFilter in i18n := HiddenFileFilter || "_*",
-    includeFilter in i18n := new SimpleFileFilter({ f => f.isFile && f.getCanonicalPath.startsWith((path in i18n).value.getCanonicalPath) }),
-    resourceManaged in i18n := webTarget.value / "i18n" / "main",
-    managedResourceDirectories in Assets+= (resourceManaged in i18n in Assets).value,
-    resourceGenerators in Assets += i18n in Assets,
-    i18n in Assets := task.dependsOn(WebKeys.webModules in Assets).value
+    i18n / defaultLocale := "en",
+    i18n / path := new File("./conf/locale"),
+    i18n / serializer := VanillaJsI18nSerializer,
+    i18n / excludeFilter := HiddenFileFilter || "_*",
+    i18n / includeFilter := new SimpleFileFilter({ f => f.isFile && f.getCanonicalPath.startsWith((i18n / path).value.getCanonicalPath) }),
+    i18n / resourceManaged := webTarget.value / "i18n" / "main",
+    Assets / managedResourceDirectories += (Assets / i18n / resourceManaged).value,
+    Assets / resourceGenerators += Assets / i18n,
+    Assets / i18n := task.dependsOn(Assets / WebKeys.webModules).value
   ))
 
   lazy val task = Def.task {
-    val sourceDir = (resourceDirectory in Compile).value
-    val targetDir = (resourceManaged in i18n in Assets).value
-    val logger = (streams in Assets).value.log
-    val vueI18nReporter = (reporter in Assets).value
-    val defaultLocaleValue = (defaultLocale in i18n).value
-    val serializerValue = (serializer in i18n).value
-    val localePath = (path in i18n).value
+    val sourceDir = (Compile / resourceDirectory).value
+    val targetDir = (Assets / i18n / resourceManaged).value
+    val logger = (Assets / streams).value.log
+    val vueI18nReporter = (Assets / reporter).value
+    val defaultLocaleValue = (i18n / defaultLocale).value
+    val serializerValue = (i18n / serializer).value
+    val localePath = (i18n / path).value
 
     val defaultLocaleFile = localePath / "messages"
 
-    val sources = (sourceDir ** ((includeFilter in i18n in Assets).value -- (excludeFilter in i18n in Assets).value)).get
+    val sources = (sourceDir ** ((Assets / i18n / includeFilter).value -- (Assets / i18n / excludeFilter).value)).get
 
     implicit val fileHasherIncludingOptions = OpInputHasher[File] { f =>
       OpInputHash.hashString(Seq(
@@ -62,7 +62,7 @@ object SbtI18n extends AutoPlugin {
       ).mkString("--"))
     }
 
-    val results = incremental.syncIncremental((streams in Assets).value.cacheDirectory / "run", sources) { modifiedSources =>
+    val results = incremental.syncIncremental((Assets / streams).value.cacheDirectory / "run", sources) { modifiedSources =>
       val startInstant = System.currentTimeMillis
 
       if (modifiedSources.nonEmpty) {

@@ -5,8 +5,12 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtWeb, SbtI18n)
 
-scalaVersion := "2.12.11"
+scalaVersion := "2.13.11"
 
 libraryDependencies ++= Seq(
   guice
 )
+
+// You can switch the serializer here.
+//I18nKeys.i18n / I18nKeys.serializer := givers.i18n.VueI18nSerializer
+I18nKeys.i18n / I18nKeys.serializer := givers.i18n.VanillaJsI18nSerializer
