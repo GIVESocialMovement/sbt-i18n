@@ -27,4 +27,4 @@ licenses := Seq(("MIT", url("http://opensource.org/licenses/MIT")))
 
 testFrameworks += new TestFramework("utest.runner.Framework")
 
-addSbtWeb("1.5.0-M1")
+addSbtJsEngine("1.2.3")
