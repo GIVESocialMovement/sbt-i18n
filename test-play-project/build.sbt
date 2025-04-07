@@ -5,7 +5,7 @@ version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala, SbtWeb, SbtI18n)
 
-scalaVersion := "2.13.11"
+scalaVersion := "2.13.16"
 
 libraryDependencies ++= Seq(
   guice
